@@ -8,10 +8,12 @@ public class Eli {
             + "           | |___| |___ | | \n"
             + "           |_____|_____|___|\n";
         System.out.println("Hello! I'm " + logo);
-        System.out.println("What can I do for you?");
+        System.out.println("Don't you DARE crash me!");
 
         String line;
         Scanner in = new Scanner(System.in);
+        String list[] = new String[100];
+        int count = 0;
         
         while (true) {
             System.out.println("_________________________________");
@@ -19,10 +21,21 @@ public class Eli {
             if (line.equals("bye")) {
                 break;
             }
+
+            
             System.out.println("_________________________________");
-            System.out.println(line);
+            if (line.equals("list")) {
+                for (int i = 0; i < count; i++) {
+                    System.out.println((i + 1) + ". " + list[i]);
+                }
+            }
+            else {
+                System.out.println("added: " + line);
+            }
+            list[count] = line;
+            count++;
         }
         System.out.println("_________________________________");
-        System.out.println("Bye. Hope to see you again soon!");
+        System.out.println("Urgh! You're finally leaving");
     }
 }
