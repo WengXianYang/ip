@@ -22,7 +22,7 @@ public class Eli {
             line = in.nextLine();
             System.out.println(DIVIDER);
             line = line.trim();
-            String lines[] = line.split(" ", 2);
+            String lines[] = line.split(" ", 6);
             switch (lines[0]) {
             case "bye":
                 System.out.println("Urgh! You're finally leaving");
@@ -76,7 +76,7 @@ public class Eli {
                 }
                 break;
             case "deadline":
-                if (lines.length == 1) {
+                if (lines.length < 4) {
                     System.out.println("Error: Missing description.");
                 } else {
                     String deadlineDescription = line.substring(lines[0].length()).trim();
@@ -95,20 +95,27 @@ public class Eli {
                 }
                 break;
             case "event":
-                if (lines.length == 1) {
+                if (lines.length < 6) {
                     System.out.println("Error: Missing description.");
                 } else {
                     String deadlineDescription = line.substring(lines[0].length()).trim();
                     int fromIndex = deadlineDescription.indexOf("/from");
                     int toIndex = deadlineDescription.indexOf("/to");
+                    String from, to;
 
                     if (fromIndex == -1 || toIndex == -1) {
                         System.out.println("Error: Event must have a /from and /to clause.");
                         break;
                     }
-                    String from = deadlineDescription.substring(fromIndex + 5, toIndex).trim();
-                    String to = deadlineDescription.substring(toIndex + 3).trim();
-                    deadlineDescription = deadlineDescription.substring(0, fromIndex).trim();
+                    if (fromIndex < toIndex) {
+                        from = deadlineDescription.substring(fromIndex + 5, toIndex).trim();
+                        to = deadlineDescription.substring(toIndex + 3).trim();
+                        deadlineDescription = deadlineDescription.substring(0, fromIndex).trim();
+                    } else {
+                        from = deadlineDescription.substring(fromIndex + 5).trim();
+                        to = deadlineDescription.substring(toIndex + 3, fromIndex).trim();
+                        deadlineDescription = deadlineDescription.substring(0, toIndex).trim();
+                    }
                     list[count] = new Event(deadlineDescription, from, to);
                     System.out.println("Got it. I've added this task:");
                     System.out.println(list[count].toString() + list[count].getStatusIcon() + list[count].getDescription());
