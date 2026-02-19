@@ -20,21 +20,21 @@ public class Eli {
 
         String line;
         Scanner in = new Scanner(System.in);
-        int count = loadTasks(list);
+        loadTasks(list);
 
         while (true) {
             System.out.println(DIVIDER);
             line = in.nextLine();
             System.out.println(DIVIDER);
             line = line.trim();
-            String lines[] = line.split(" ", 6);
+            String lines[] = line.split(" ", 2);
             switch (lines[0]) {
             case "bye":
                 System.out.println("Urgh! You're finally leaving");
                 return;
             case "list":
                 System.out.println("Here are the tasks in your list:");
-                for (int i = 0; i < count; i++) {
+                for (int i = 0; i < list.size(); i++) {
                     System.out.println((i + 1) + "." +list.get(i).toString());
                 }
                 break;
@@ -43,11 +43,11 @@ public class Eli {
                     int taskNum = Integer.parseInt(lines[1].trim()) - 1;
 
                     // Check if the number is actually within the list range
-                    if (taskNum >= 0 && taskNum < count) {
+                    if (taskNum >= 0 && taskNum < list.size()) {
                         list.get(taskNum).markAsDone();
                         System.out.println("Nice! I've marked this task as done:");
                         System.out.println(list.get(taskNum).toString());
-                        saveTasks(list, count);
+                        saveTasks(list);
                     } else {
                         System.out.println("Error: That task number doesn't exist!");
                     }
@@ -59,11 +59,11 @@ public class Eli {
             case "unmark":
                 try {
                     int taskNum = Integer.parseInt(lines[1].trim()) - 1;
-                    if (taskNum >= 0 && taskNum < count) {
+                    if (taskNum >= 0 && taskNum < list.size()) {
                         list.get(taskNum).unmarkAsDone();
                         System.out.println("OK, I've unmarked this task as not done yet:");
                         System.out.println(list.get(taskNum).toString());
-                        saveTasks(list, count);
+                        saveTasks(list);
                     } else {
                         System.out.println("Error: That task number doesn't exist!");
                     }
@@ -72,50 +72,42 @@ public class Eli {
                 }
                 break;
             case "todo":
-                if (lines.length == 1) {
-                    System.out.println("Error: The description of a todo cannot be empty.");
-                } else {
-                    list.add(new Todo(line.substring(lines[0].length()).trim()));
+                try {
+                    list.add(new Todo(lines[1].trim()));
                     System.out.println("Got it. I've added this task:");
-                    System.out.println(list.get(count).toString());
-                    count++;
-                    System.out.println("Now you have " + count + " tasks in the list.");
-                    saveTasks(list, count);
+                    System.out.println(list.get(list.size() - 1).toString());
+                    System.out.println("Now you have " + list.size() + " tasks in the list.");
+                    saveTasks(list);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    System.out.println("Error: The description of a todo cannot be empty.");
                 }
                 break;
             case "deadline":
-                if (lines.length < 4) {
-                    System.out.println("Error: Missing description.");
-                } else {
-                    String deadlineDescription = line.substring(lines[0].length()).trim();
+                try {
+                    String deadlineDescription = lines[1].trim();
                     int byIndex = deadlineDescription.indexOf("/by");
-                    if (byIndex == -1) {
-                        System.out.println("Error: Deadline must have a /by clause.");
-                        break;
-                    }
                     String by = deadlineDescription.substring(byIndex + 3).trim();
                     deadlineDescription = deadlineDescription.substring(0, byIndex).trim();
+                    if (by.isEmpty() || deadlineDescription.isEmpty()) {
+                        System.out.println("Error: Empty description or deadline. Please provide both a description and a deadline (e.g., deadline return book /by Sunday).");
+                        break;
+                    }
                     list.add(new Deadline(deadlineDescription, by));
                     System.out.println("Got it. I've added this task:");
-                    System.out.println(list.get(count).toString());
-                    count++;
-                    System.out.println("Now you have " + count + " tasks in the list.");
-                    saveTasks(list, count);
+                    System.out.println(list.get(list.size() - 1).toString());
+                    System.out.println("Now you have " + list.size() + " tasks in the list.");
+                    saveTasks(list);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    System.out.println("Error: Deadline must have a /by clause (e.g., deadline return book /by Sunday).");
                 }
                 break;
             case "event":
-                if (lines.length < 6) {
-                    System.out.println("Error: Missing description.");
-                } else {
-                    String deadlineDescription = line.substring(lines[0].length()).trim();
+                try {
+                    String deadlineDescription = lines[1].trim();
                     int fromIndex = deadlineDescription.indexOf("/from");
                     int toIndex = deadlineDescription.indexOf("/to");
                     String from, to;
 
-                    if (fromIndex == -1 || toIndex == -1) {
-                        System.out.println("Error: Event must have a /from and /to clause.");
-                        break;
-                    }
                     if (fromIndex < toIndex) {
                         from = deadlineDescription.substring(fromIndex + 5, toIndex).trim();
                         to = deadlineDescription.substring(toIndex + 3).trim();
@@ -125,12 +117,18 @@ public class Eli {
                         to = deadlineDescription.substring(toIndex + 3, fromIndex).trim();
                         deadlineDescription = deadlineDescription.substring(0, toIndex).trim();
                     }
+
+                    if (from.isEmpty() || to.isEmpty() || deadlineDescription.isEmpty()) {
+                        System.out.println("Error: Empty description, start time, or end time. Please provide a description, start time, and end time (e.g., event project meeting /from Mon 2pm /to 4pm).");
+                        break;
+                    }
                     list.add(new Event(deadlineDescription, from, to));
                     System.out.println("Got it. I've added this task:");
-                    System.out.println(list.get(count).toString());
-                    count++;
-                    System.out.println("Now you have " + count + " tasks in the list.");
-                    saveTasks(list, count);
+                    System.out.println(list.get(list.size() - 1).toString());
+                    System.out.println("Now you have " + list.size() + " tasks in the list.");
+                    saveTasks(list);
+                } catch (ArrayIndexOutOfBoundsException | StringIndexOutOfBoundsException e) {
+                    System.out.println("Error: Event must have a /from and /to clause (e.g., event project meeting /from Mon 2pm /to 4pm).");
                 }
                 break;
             case "":
@@ -139,13 +137,12 @@ public class Eli {
             case "delete":
                 try {
                     int taskNum = Integer.parseInt(lines[1].trim()) - 1;
-                    if (taskNum >= 0 && taskNum < count) {
+                    if (taskNum >= 0 && taskNum < list.size()) {
                         System.out.println("Noted. I've removed this task:");
                         System.out.println(list.get(taskNum).toString());
                         // Remove task from the list
                         list.remove(taskNum);
-                        count--;
-                        System.out.println("Now you have " + count + " tasks in the list.");
+                        System.out.println("Now you have " + list.size() + " tasks in the list.");
                     } else {
                         System.out.println("Error: That task number doesn't exist!");
                     }
@@ -156,20 +153,19 @@ public class Eli {
             default:
                 System.out.println("added: " + line);
                 list.add(new Task(line));
-                count++;
-                saveTasks(list, count);
+                saveTasks(list);
             }
         }
     }
 
-    private static void saveTasks(ArrayList<Task> list, int count) {
+    private static void saveTasks(ArrayList<Task> list) {
         try {
             File dir = new File("./data");
             if (!dir.exists()) {
                 dir.mkdirs(); // Creates the ./data directory if it doesn't exist
             }
             FileWriter fw = new FileWriter(FILE_PATH);
-            for (int i = 0; i < count; i++) {
+            for (int i = 0; i < list.size(); i++) {
                 fw.write(list.get(i).toFileFormat() + System.lineSeparator());
             }
             fw.close();
@@ -190,8 +186,9 @@ public class Eli {
             while (fileScanner.hasNext()) {
                 String line = fileScanner.nextLine();
                 String[] parts = line.split(" \\| ");
-                if (parts.length < 3) continue;
-
+                if (parts.length < 3) {
+                    continue;
+                }
                 String type = parts[0];
                 boolean isDone = parts[1].equals("1");
                 String desc = parts[2];
@@ -202,10 +199,14 @@ public class Eli {
                     task = new Todo(desc);
                     break;
                 case "D":
-                    if (parts.length >= 4) task = new Deadline(desc, parts[3]);
+                    if (parts.length >= 4) {
+                        task = new Deadline(desc, parts[3]);
+                    }
                     break;
                 case "E":
-                    if (parts.length >= 5) task = new Event(desc, parts[3], parts[4]);
+                    if (parts.length >= 5) {
+                        task = new Event(desc, parts[3], parts[4]);
+                    }
                     break;
                 default:
                     task = new Task(desc);
