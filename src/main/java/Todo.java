@@ -7,4 +7,10 @@ public class Todo extends Task {
     public String toString() {
         return "[T]";
     }
+
+    @Override
+    public String toFileFormat() {
+        String isDoneString = getStatusIcon().contains("X") ? "1" : "0";
+        return "T | " + isDoneString + " | " + getDescription();
+    }
 }

@@ -15,4 +15,10 @@ public class Deadline extends Task {
     public String getDescription() {
         return this.description + " (by: " + this.by + ")";
     }
+
+    @Override
+    public String toFileFormat() {
+        String isDoneString = getStatusIcon().contains("X") ? "1" : "0";
+        return "D | " + isDoneString + " | " + this.description + " | " + this.by; 
+    }
 }
