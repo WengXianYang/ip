@@ -46,7 +46,7 @@ public class Eli {
                     if (taskNum >= 0 && taskNum < count) {
                         list.get(taskNum).markAsDone();
                         System.out.println("Nice! I've marked this task as done:");
-                        System.out.println(list[taskNum].toString() + list[taskNum].getStatusIcon() + list[taskNum].getDescription());
+                        System.out.println(list.get(taskNum).toString());
                         saveTasks(list, count);
                     } else {
                         System.out.println("Error: That task number doesn't exist!");
@@ -62,7 +62,7 @@ public class Eli {
                     if (taskNum >= 0 && taskNum < count) {
                         list.get(taskNum).unmarkAsDone();
                         System.out.println("OK, I've unmarked this task as not done yet:");
-                        System.out.println(list[taskNum].toString() + list[taskNum].getStatusIcon() + list[taskNum].getDescription());
+                        System.out.println(list.get(taskNum).toString());
                         saveTasks(list, count);
                     } else {
                         System.out.println("Error: That task number doesn't exist!");
@@ -162,7 +162,7 @@ public class Eli {
         }
     }
 
-    private static void saveTasks(Task[] list, int count) {
+    private static void saveTasks(ArrayList<Task> list, int count) {
         try {
             File dir = new File("./data");
             if (!dir.exists()) {
@@ -170,7 +170,7 @@ public class Eli {
             }
             FileWriter fw = new FileWriter(FILE_PATH);
             for (int i = 0; i < count; i++) {
-                fw.write(list[i].toFileFormat() + System.lineSeparator());
+                fw.write(list.get(i).toFileFormat() + System.lineSeparator());
             }
             fw.close();
         } catch (IOException e) {
@@ -178,7 +178,7 @@ public class Eli {
         }
     }
 
-    private static int loadTasks(Task[] list) {
+    private static int loadTasks(ArrayList<Task> list) {
         int count = 0;
         File file = new File(FILE_PATH);
         if (!file.exists()) {
@@ -216,7 +216,7 @@ public class Eli {
                     if (isDone) {
                         task.markAsDone();
                     }
-                    list[count] = task;
+                    list.add(task);
                     count++;
                 }
             }
