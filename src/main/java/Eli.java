@@ -126,6 +126,26 @@ public class Eli {
             case "":
                 // Ignore empty input
                 break;
+            case "delete":
+                try {
+                    int taskNum = Integer.parseInt(lines[1].trim()) - 1;
+                    if (taskNum >= 0 && taskNum < count) {
+                        System.out.println("Noted. I've removed this task:");
+                        System.out.println(list[taskNum].toString());
+                        // Shift tasks left to fill the gap
+                        for (int i = taskNum; i < count - 1; i++) {
+                            list[i] = list[i + 1];
+                        }
+                        list[count - 1] = null; // Clear the last slot
+                        count--;
+                        System.out.println("Now you have " + count + " tasks in the list.");
+                    } else {
+                        System.out.println("Error: That task number doesn't exist!");
+                    }
+                } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                    System.out.println("Error: Please enter a valid number after 'delete' (e.g., delete 1).");
+                }
+                break;
             default:
                 System.out.println("added: " + line);
                 list[count] = new Task(line);
