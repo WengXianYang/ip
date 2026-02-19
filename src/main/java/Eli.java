@@ -30,7 +30,7 @@ public class Eli {
             case "list":
                 System.out.println("Here are the tasks in your list:");
                 for (int i = 0; i < count; i++) {
-                    System.out.println((i + 1) + "." +list[i].toString() + list[i].getStatusIcon() + list[i].getDescription());
+                    System.out.println((i + 1) + "." +list[i].toString());
                 }
                 break;
             case "mark":
@@ -41,7 +41,7 @@ public class Eli {
                     if (taskNum >= 0 && taskNum < count) {
                         list[taskNum].markAsDone();
                         System.out.println("Nice! I've marked this task as done:");
-                        System.out.println(list[taskNum].toString() + list[taskNum].getStatusIcon() + list[taskNum].getDescription());
+                        System.out.println(list[taskNum].toString());
                     } else {
                         System.out.println("Error: That task number doesn't exist!");
                     }
@@ -56,7 +56,7 @@ public class Eli {
                     if (taskNum >= 0 && taskNum < count) {
                         list[taskNum].unmarkAsDone();
                         System.out.println("OK, I've unmarked this task as not done yet:");
-                        System.out.println(list[taskNum].toString() + list[taskNum].getStatusIcon() + list[taskNum].getDescription());
+                        System.out.println(list[taskNum].toString());
                     } else {
                         System.out.println("Error: That task number doesn't exist!");
                     }
@@ -70,7 +70,7 @@ public class Eli {
                 } else {
                     list[count] = new Todo(line.substring(lines[0].length()).trim());
                     System.out.println("Got it. I've added this task:");
-                    System.out.println(list[count].toString() + list[count].getStatusIcon() + list[count].getDescription());
+                    System.out.println(list[count].toString());
                     count++;
                     System.out.println("Now you have " + count + " tasks in the list.");
                 }
@@ -89,7 +89,7 @@ public class Eli {
                     deadlineDescription = deadlineDescription.substring(0, byIndex).trim();
                     list[count] = new Deadline(deadlineDescription, by);
                     System.out.println("Got it. I've added this task:");
-                    System.out.println(list[count].toString() + list[count].getStatusIcon() + list[count].getDescription());
+                    System.out.println(list[count].toString());
                     count++;
                     System.out.println("Now you have " + count + " tasks in the list.");
                 }
@@ -118,7 +118,7 @@ public class Eli {
                     }
                     list[count] = new Event(deadlineDescription, from, to);
                     System.out.println("Got it. I've added this task:");
-                    System.out.println(list[count].toString() + list[count].getStatusIcon() + list[count].getDescription());
+                    System.out.println(list[count].toString());
                     count++;
                     System.out.println("Now you have " + count + " tasks in the list.");
                 }
