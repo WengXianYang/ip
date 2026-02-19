@@ -1,9 +1,14 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.ArrayList;
 
 public class Eli {
     private static ArrayList<Task> list = new ArrayList<>();
     private static final String DIVIDER = "_________________________________";
+    private static final String FILE_PATH = "./data/eli.txt";
     public static void main(String[] args) {
         String logo = " _____ _     ___ \n" 
         + "           | ____| |   |_ _|\n" 
@@ -15,7 +20,7 @@ public class Eli {
 
         String line;
         Scanner in = new Scanner(System.in);
-        int count = 0;
+        int count = loadTasks(list);
 
         while (true) {
             System.out.println(DIVIDER);
@@ -41,7 +46,8 @@ public class Eli {
                     if (taskNum >= 0 && taskNum < count) {
                         list.get(taskNum).markAsDone();
                         System.out.println("Nice! I've marked this task as done:");
-                        System.out.println(list.get(taskNum).toString());
+                        System.out.println(list[taskNum].toString() + list[taskNum].getStatusIcon() + list[taskNum].getDescription());
+                        saveTasks(list, count);
                     } else {
                         System.out.println("Error: That task number doesn't exist!");
                     }
@@ -56,7 +62,8 @@ public class Eli {
                     if (taskNum >= 0 && taskNum < count) {
                         list.get(taskNum).unmarkAsDone();
                         System.out.println("OK, I've unmarked this task as not done yet:");
-                        System.out.println(list.get(taskNum).toString());
+                        System.out.println(list[taskNum].toString() + list[taskNum].getStatusIcon() + list[taskNum].getDescription());
+                        saveTasks(list, count);
                     } else {
                         System.out.println("Error: That task number doesn't exist!");
                     }
@@ -73,6 +80,7 @@ public class Eli {
                     System.out.println(list.get(count).toString());
                     count++;
                     System.out.println("Now you have " + count + " tasks in the list.");
+                    saveTasks(list, count);
                 }
                 break;
             case "deadline":
@@ -92,6 +100,7 @@ public class Eli {
                     System.out.println(list.get(count).toString());
                     count++;
                     System.out.println("Now you have " + count + " tasks in the list.");
+                    saveTasks(list, count);
                 }
                 break;
             case "event":
@@ -121,6 +130,7 @@ public class Eli {
                     System.out.println(list.get(count).toString());
                     count++;
                     System.out.println("Now you have " + count + " tasks in the list.");
+                    saveTasks(list, count);
                 }
                 break;
             case "":
@@ -147,7 +157,73 @@ public class Eli {
                 System.out.println("added: " + line);
                 list.add(new Task(line));
                 count++;
+                saveTasks(list, count);
             }
         }
+    }
+
+    private static void saveTasks(Task[] list, int count) {
+        try {
+            File dir = new File("./data");
+            if (!dir.exists()) {
+                dir.mkdirs(); // Creates the ./data directory if it doesn't exist
+            }
+            FileWriter fw = new FileWriter(FILE_PATH);
+            for (int i = 0; i < count; i++) {
+                fw.write(list[i].toFileFormat() + System.lineSeparator());
+            }
+            fw.close();
+        } catch (IOException e) {
+            System.out.println("Error saving tasks: " + e.getMessage());
+        }
+    }
+
+    private static int loadTasks(Task[] list) {
+        int count = 0;
+        File file = new File(FILE_PATH);
+        if (!file.exists()) {
+            return count; // Return 0 if no file exists yet
+        }
+        
+        try {
+            Scanner fileScanner = new Scanner(file);
+            while (fileScanner.hasNext()) {
+                String line = fileScanner.nextLine();
+                String[] parts = line.split(" \\| ");
+                if (parts.length < 3) continue;
+
+                String type = parts[0];
+                boolean isDone = parts[1].equals("1");
+                String desc = parts[2];
+                Task task = null;
+
+                switch (type) {
+                case "T":
+                    task = new Todo(desc);
+                    break;
+                case "D":
+                    if (parts.length >= 4) task = new Deadline(desc, parts[3]);
+                    break;
+                case "E":
+                    if (parts.length >= 5) task = new Event(desc, parts[3], parts[4]);
+                    break;
+                default:
+                    task = new Task(desc);
+                    break;
+                }
+
+                if (task != null) {
+                    if (isDone) {
+                        task.markAsDone();
+                    }
+                    list[count] = task;
+                    count++;
+                }
+            }
+            fileScanner.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Error loading tasks: " + e.getMessage());
+        }
+        return count;
     }
 }

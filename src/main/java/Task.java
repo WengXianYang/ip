@@ -26,4 +26,9 @@ public class Task {
     public String toString() {
         return "[ ]" + getStatusIcon() + getDescription();
     }
+
+    public String toFileFormat() {
+        String isDoneString = getStatusIcon().contains("X") ? "1" : "0"; 
+        return "G | " + isDoneString + " | " + getDescription();
+    }
 }

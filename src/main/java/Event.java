@@ -16,4 +16,10 @@ public class Event extends Task {
     public String getDescription() {
         return this.description + " (from: " + this.from + " to: " + this.to + ")";
     }
+
+    @Override
+    public String toFileFormat() {
+        String isDoneString = getStatusIcon().contains("X") ? "1" : "0";
+        return "E | " + isDoneString + " | " + this.description + " | " + this.from + " | " + this.to;
+    }
 }
