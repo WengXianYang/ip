@@ -8,6 +8,10 @@ import ui.Ui;
 public class FindCommand extends Command {
     private String keyword;
 
+    /**
+     * Constructs a FindCommand with the specified keyword of type String to search for in task descriptions.
+     * @param keyword
+     */
     public FindCommand(String keyword) {
         this.keyword = keyword;
     }

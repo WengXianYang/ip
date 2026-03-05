@@ -1,6 +1,10 @@
 package ui;
 import java.util.Scanner;
 
+/**
+ * Handles all interactions with the user. Responsible for reading user input
+ * and printing formatted messages to the console.
+ */
 public class Ui {
     private static final String DIVIDER = "_________________________________";
     private Scanner in;
@@ -9,6 +13,7 @@ public class Ui {
         in = new Scanner(System.in);
     }
 
+    
     public void showWelcome() {
         String logo = "            _____ _     ___ \n" 
         + "           | ____| |   |_ _|\n" 

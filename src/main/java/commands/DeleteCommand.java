@@ -9,6 +9,11 @@ import ui.Ui;
 public class DeleteCommand extends Command {
     private int taskIndex;
 
+    /**
+     * Constructs a DeleteCommand with the specified index of the task to delete.
+     *
+     * @param taskIndex The zero-based index of the task to be deleted from the list.
+     */
     public DeleteCommand(int taskIndex) {
         this.taskIndex = taskIndex;
     }
