@@ -150,6 +150,28 @@ public class Eli {
                     System.out.println("Error: Please enter a valid number after 'delete' (e.g., delete 1).");
                 }
                 break;
+            case "find":
+                String keyword;
+                try {
+                    keyword = lines[1].trim();
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    System.out.println("Error: Please provide a keyword to search for (e.g., find book).");
+                    break;
+                }
+                System.out.println("Here are the matching tasks in your list:");
+                int count = 0;
+            
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i).getDescription().contains(keyword)) {
+                        System.out.println((i + 1) + "." + list.get(i).toString());
+                        count++;
+                    }
+                }
+                
+                if (count == 0) {
+                    System.out.println("No matching tasks found.");
+                }
+                break;
             default:
                 System.out.println("added: " + line);
                 list.add(new Task(line));
