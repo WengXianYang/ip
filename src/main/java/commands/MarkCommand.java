@@ -9,6 +9,11 @@ import ui.Ui;
 public class MarkCommand extends Command {
     private int taskIndex;
 
+    /**
+     * Constructs a MarkCommand with the specified index of the task to mark as done.
+     *
+     * @param taskIndex The zero-based index of the task to be marked as done in the list.
+     */
     public MarkCommand(int taskIndex) {
         this.taskIndex = taskIndex;
     }

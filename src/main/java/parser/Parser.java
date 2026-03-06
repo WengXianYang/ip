@@ -13,8 +13,20 @@ import tasks.Deadline;
 import tasks.Event;
 import tasks.Todo;
 
+/**
+ * Parses raw string input from the user and translates it into executable
+ * Command objects.
+ */
 public class Parser {
 
+    /**
+     * Interprets the user's input string and returns the corresponding Command.
+     *
+     * @param fullCommand The raw string entered by the user.
+     * @return A Command object representing the action the user wants to perform.
+     * @throws EliException If the user input is invalid, incomplete, or incorrectly
+     *                      formatted.
+     */
     public static Command parse(String fullCommand) throws EliException {
         if (fullCommand.trim().isEmpty()) {
             throw new EliException("Command cannot be empty.");

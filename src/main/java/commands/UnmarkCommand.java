@@ -9,6 +9,11 @@ import ui.Ui;
 public class UnmarkCommand extends Command {
     private int taskIndex;
 
+    /**
+     * Constructs an UnmarkCommand with the specified index of the task to unmark as done.
+     *
+     * @param taskIndex The zero-based index of the task to be unmarked as done in the list.    
+     */
     public UnmarkCommand(int taskIndex) {
         this.taskIndex = taskIndex;
     }
